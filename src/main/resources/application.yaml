@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: persona-agent
+
+openai:
+  apiKey: ${OPEN_API_KEY}
