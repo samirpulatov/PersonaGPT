@@ -13,9 +13,8 @@ import org.springframework.context.annotation.Bean;
 public class PersonaAgentApplication {
 
 	public static void main(String[] args) {
-		var context = SpringApplication.run(PersonaAgentApplication.class, args);
-        PersonaAgentConfig config = context.getBean(PersonaAgentConfig.class);
-        System.out.println(config.getApiKey());
+		SpringApplication.run(PersonaAgentApplication.class, args);
+
 
 	}
 

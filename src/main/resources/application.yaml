@@ -1,6 +1,15 @@
 spring:
   application:
     name: persona-agent
+  datasource:
+    url: jdbc:mysql://localhost:3306/persona-agent?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: samir
+    password: Samir121416
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
 
 openai:
   apiKey: ${OPEN_API_KEY}
