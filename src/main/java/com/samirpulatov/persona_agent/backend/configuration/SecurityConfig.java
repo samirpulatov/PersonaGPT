@@ -1,4 +1,4 @@
-package com.samirpulatov.persona_agent.configuration;
+package com.samirpulatov.persona_agent.backend.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

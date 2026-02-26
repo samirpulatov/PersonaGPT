@@ -1,7 +1,7 @@
-package com.samirpulatov.persona_agent.service;
+package com.samirpulatov.persona_agent.backend.service;
 
-import com.samirpulatov.persona_agent.entity.User;
-import com.samirpulatov.persona_agent.repository.UserRepository;
+import com.samirpulatov.persona_agent.backend.entity.User;
+import com.samirpulatov.persona_agent.backend.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

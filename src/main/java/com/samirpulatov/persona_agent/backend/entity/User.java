@@ -1,4 +1,4 @@
-package com.samirpulatov.persona_agent.entity;
+package com.samirpulatov.persona_agent.backend.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

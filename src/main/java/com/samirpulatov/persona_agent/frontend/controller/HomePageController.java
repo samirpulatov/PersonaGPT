@@ -1,8 +1,9 @@
-package com.samirpulatov.persona_agent.controller;
+package com.samirpulatov.persona_agent.frontend.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+//Controller for directing through the application
 @Controller
 public class HomePageController {
 

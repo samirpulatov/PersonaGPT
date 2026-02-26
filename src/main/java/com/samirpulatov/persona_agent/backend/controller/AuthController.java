@@ -1,6 +1,6 @@
-package com.samirpulatov.persona_agent.controller;
+package com.samirpulatov.persona_agent.backend.controller;
 
-import com.samirpulatov.persona_agent.service.UserService;
+import com.samirpulatov.persona_agent.backend.service.UserService;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
