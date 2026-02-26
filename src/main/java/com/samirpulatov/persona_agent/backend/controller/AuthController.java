@@ -1,13 +1,13 @@
 package com.samirpulatov.persona_agent.backend.controller;
 
+import com.samirpulatov.persona_agent.backend.dto.UserRegisterForm;
 import com.samirpulatov.persona_agent.backend.service.UserService;
 
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
 @RequestMapping("/auth")
 public class AuthController {
 
@@ -18,8 +18,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestParam String username, @RequestParam String password) {
-        return userService.registerUser(username, password);
+    public String register(@ModelAttribute UserRegisterForm form, Model model) {
+        return userService.registerUser(form.firstName(), form.lastName(), form.email(),form.password(),model);
     }
 
 }
