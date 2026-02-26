@@ -35,8 +35,15 @@
             </div>
 
             <div class="card">
+                <span
+                        id="reqIndicator"
+                        class="req-indicator"
+                        title="All fields are required"
+                        aria-label="All fields are required"
+                >*</span>
+
                 <div class="card__pad">
-                    <form class="form" method="post" action="/signup">
+                    <form id="signupForm" class="form" method="post" action="/signup" novalidate>
                         <div class="form__grid">
                             <div class="form__row">
                                 <label for="firstName">First name</label>
@@ -96,6 +103,63 @@
 
     <script>
         document.getElementById('y').textContent = new Date().getFullYear();
+
+        const form = document.getElementById('signupForm');
+        const indicator = document.getElementById('reqIndicator');
+
+        function clearInvalidState() {
+            form.querySelectorAll('.label-invalid').forEach(l => l.classList.remove('label-invalid'));
+            form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+        }
+
+        function markInvalidFields() {
+            const fields = form.querySelectorAll('input, select, textarea');
+            let hasInvalid = false;
+
+            fields.forEach(field => {
+                const label = form.querySelector(`label[for="${field.id}"]`);
+                const invalid = !field.checkValidity();
+
+                if (invalid) {
+                    hasInvalid = true;
+                    field.classList.add('is-invalid');
+                    if (label) label.classList.add('label-invalid');
+                }
+            });
+
+            indicator.classList.toggle('req-indicator--on', hasInvalid);
+            indicator.title = hasInvalid ? "This field is required" : "All fields are required";
+            return hasInvalid;
+        }
+
+        form.addEventListener('submit', (e) => {
+            clearInvalidState();
+
+            if (!form.checkValidity()) {
+                e.preventDefault();
+                markInvalidFields();
+                return;
+            }
+
+            indicator.classList.remove('req-indicator--on');
+            indicator.title = "All fields are required";
+        });
+
+        form.addEventListener('input', (e) => {
+            const field = e.target;
+            if (!(field instanceof HTMLElement)) return;
+            if (!('checkValidity' in field)) return;
+
+            if (field.checkValidity()) {
+                field.classList.remove('is-invalid');
+                const label = form.querySelector(`label[for="${field.id}"]`);
+                if (label) label.classList.remove('label-invalid');
+
+                const stillInvalid = Array.from(form.querySelectorAll('input, select, textarea'))
+                    .some(f => !f.checkValidity());
+                indicator.classList.toggle('req-indicator--on', stillInvalid);
+            }
+        });
     </script>
 </footer>
 </body>

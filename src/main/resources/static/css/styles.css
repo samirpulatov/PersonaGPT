@@ -15,6 +15,10 @@
 
     /* new: display font only for PersonaGPT / headings */
     --display-font: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
+
+    /* new */
+    --danger: #dc2626;
+    --danger-soft: rgba(220, 38, 38, 0.12);
 }
 
 /* new: display font import (safe fallback if it doesn't load) */
@@ -178,6 +182,9 @@ h1{
     border: 1px solid var(--border);
     border-radius: var(--radius);
     box-shadow: var(--shadow);
+
+    /* new: for the top-right star positioning */
+    position: relative;
 }
 .card__pad{ padding: 18px; }
 
@@ -378,6 +385,51 @@ label{
 }
 .small-link a:hover{
     color: var(--blue-2);
+}
+
+/* --- new: required indicator star (top-right) --- */
+.req-indicator{
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    display: grid;
+    place-items: center;
+    font-weight: 800;
+    font-size: 14px;
+    line-height: 1;
+    border: 1px solid var(--border);
+    background: #fff;
+    color: var(--muted);
+    cursor: help;
+    user-select: none;
+}
+.req-indicator--on{
+    border-color: rgba(220, 38, 38, 0.25);
+    color: var(--danger);
+    background: #fff;
+}
+
+/* --- new: invalid state (labels turn red after clicking Next) --- */
+.label-invalid{
+    color: var(--danger);
+}
+
+.is-invalid{
+    border-color: rgba(220, 38, 38, 0.45);
+    box-shadow: 0 0 0 4px var(--danger-soft);
+}
+
+/* Optional: keep your focus style but let invalid win visually */
+.input:focus, select:focus{
+    border-color: rgba(10,102,194,0.45);
+    box-shadow: 0 0 0 4px rgba(10,102,194,0.12);
+}
+.is-invalid:focus{
+    border-color: rgba(220, 38, 38, 0.45);
+    box-shadow: 0 0 0 4px var(--danger-soft);
 }
 
 /* Responsive */
