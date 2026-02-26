@@ -34,7 +34,7 @@ public class PersonaAgentApplication implements CommandLineRunner {
         if(Desktop.isDesktopSupported()) {
             new Thread(() -> {
                 try {
-                    // timeout to let server start
+                    // timeout to let the server start
                     Thread.sleep(1000);
                     Desktop.getDesktop().browse(URI.create(url));
                 } catch (IOException | InterruptedException e) {
@@ -45,5 +45,4 @@ public class PersonaAgentApplication implements CommandLineRunner {
         }
 
     }
-
 }

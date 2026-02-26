@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PersonaGPT — Faster hiring and job search, powered by your LinkedIn PDF</title>
+    <meta name="description" content="PersonaGPT turns your LinkedIn PDF into an AI-powered profile chat. Recruiters can ask questions instantly; if AI can’t answer, you get notified. Faster screening, fewer back-and-forth messages.">
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+</head>
+<body>
+<header class="header">
+    <div class="container">
+        <div class="header__inner">
+            <a class="brand" href="#top" aria-label="Go to top">
+                <span class="logo" aria-hidden="true"></span>
+                <span>PersonaGPT</span>
+            </a>
+
+            <nav class="nav" aria-label="Navigation">
+                <a href="#value">What it does</a>
+                <a href="#how">How it works</a>
+                <a href="#for">Who it’s for</a>
+                <a href="#faq">FAQ</a>
+            </nav>
+
+            <div style="display:flex; gap:10px;">
+                <a class="btn btn--ghost" href="/signin">Sign in</a>
+                <a class="btn btn--primary" href="/sign_up">Sign up</a>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main id="top">
+    <div class="container">
+        <section class="hero">
+            <div class="hero__grid">
+                <div>
+                    <h1>Your LinkedIn profile becomes a chat. Hiring and job search get faster.</h1>
+
+                    <p class="lead">
+                        PersonaGPT lets candidates upload the <b>LinkedIn PDF</b> (exported from their profile).
+                        Recruiters can open a dedicated chat and ask questions immediately.
+                        The AI answers based on the PDF — and if it can’t, the candidate gets notified that someone is interested.
+                    </p>
+
+                    <div class="hero__actions" id="cta">
+                        <a class="btn btn--primary" href="#demo">Try PersonaGPT</a>
+                        <a class="btn btn--ghost" href="#value">See what it solves</a>
+                    </div>
+
+                    <div class="mini" aria-label="Key benefits">
+                        <span>Less back-and-forth</span>
+                        <span>Faster screening</span>
+                        <span>Interest notifications</span>
+                    </div>
+                </div>
+
+                <aside class="card preview" aria-label="Preview: outcomes">
+                    <div class="preview__top">
+                        <strong style="font-size:14px;">Instant profile Q&A</strong>
+                        <div class="chips" aria-hidden="true">
+                            <span class="chip">Recruiting</span>
+                            <span class="chip">Job Search</span>
+                            <span class="chip">LinkedIn PDF</span>
+                        </div>
+                    </div>
+                    <div class="preview__body">
+                        <div class="stat">
+                            <div>
+                                <b>Time-to-answer questions</b><br>
+                                <small>AI answers instantly from the candidate’s PDF</small>
+                            </div>
+                            <div class="pill">faster</div>
+                        </div>
+                        <div class="stat">
+                            <div>
+                                <b>Less repetitive messaging</b><br>
+                                <small>common questions handled before a live call</small>
+                            </div>
+                            <div class="pill">simpler</div>
+                        </div>
+                        <div class="stat">
+                            <div>
+                                <b>Candidate stays in control</b><br>
+                                <small>if AI can’t answer, the candidate gets notified</small>
+                            </div>
+                            <div class="pill">clear</div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section id="value">
+            <div class="section__head">
+                <div>
+                    <h2>What PersonaGPT does</h2>
+                    <p class="sub">
+                        It turns a LinkedIn PDF into a structured, searchable, AI-chat experience — so both sides move faster.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid-3">
+                <div class="feature">
+                    <h3>Speed up early-stage screening</h3>
+                    <p>Recruiters ask questions right away and get answers without scheduling a call for every basic detail.</p>
+                </div>
+                <div class="feature">
+                    <h3>Reduce friction for candidates</h3>
+                    <p>Less repeating the same info. If interest is real, candidates get a notification and can jump in.</p>
+                </div>
+                <div class="feature">
+                    <h3>Keep everything focused on LinkedIn</h3>
+                    <p>Works best when both recruiters and candidates already have LinkedIn profiles and speak the same format.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="how">
+            <div class="section__head">
+                <div>
+                    <h2>How it works</h2>
+                    <p class="sub">
+                        A simple flow: upload → chat → AI answers → notify when human input is needed.
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid-3">
+                <div class="feature">
+                    <h3>1) Export your LinkedIn PDF</h3>
+                    <p>Candidate downloads their LinkedIn profile as a PDF and uploads it to PersonaGPT.</p>
+                </div>
+                <div class="feature">
+                    <h3>2) Recruiter opens a dedicated chat</h3>
+                    <p>Interested recruiters can ask role-specific questions (availability, projects, skills, scope, etc.).</p>
+                </div>
+                <div class="feature">
+                    <h3>3) AI answers — or notifies the candidate</h3>
+                    <p>If the AI can’t answer confidently from the PDF, the candidate gets notified that someone is interested.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="for">
+            <div class="section__head">
+                <div>
+                    <h2>Who it’s for</h2>
+                    <p class="sub">
+                        Built for recruiters and job seekers — as long as both sides have LinkedIn profiles.
+                    </p>
+                </div>
+            </div>
+
+            <div class="split">
+                <div class="panel">
+                    <h3>Recruiters</h3>
+                    <ul class="list">
+                        <li>Get answers to common questions instantly (based on the LinkedIn PDF)</li>
+                        <li>Spend fewer cycles on repetitive early-stage messaging</li>
+                        <li>Move to a real conversation only when there’s strong signal</li>
+                        <li>Keep the process lightweight and fast</li>
+                    </ul>
+                </div>
+
+                <div class="panel">
+                    <h3>Job seekers</h3>
+                    <ul class="list">
+                        <li>Turn your LinkedIn PDF into an interactive profile</li>
+                        <li>Save time on repeating background info</li>
+                        <li>Get notified when a recruiter shows interest</li>
+                        <li>Answer only when needed (the AI handles the basics)</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="faq">
+            <div class="section__head">
+                <div>
+                    <h2>FAQ</h2>
+                    <p class="sub">Quick answers about PersonaGPT.</p>
+                </div>
+            </div>
+
+            <div class="grid-3">
+                <div class="feature">
+                    <h3>Is this a LinkedIn replacement?</h3>
+                    <p>No. PersonaGPT uses a LinkedIn-exported PDF as input and focuses on speeding up Q&A and screening.</p>
+                </div>
+                <div class="feature">
+                    <h3>What if the AI answers incorrectly?</h3>
+                    <p>The AI should answer only from the PDF. If it can’t answer, it triggers a notification so the candidate can respond.</p>
+                </div>
+                <div class="feature" id="demo">
+                    <h3>How do I get access?</h3>
+                    <p>Click “Request a demo” and share what roles you hire for (or what job you’re searching for).</p>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer__row">
+            <div>© <span id="y"></span> PersonaGPT</div>
+            <div style="display:flex; gap:12px;">
+                <a href="#top">Top</a>
+                <a href="#value">What it does</a>
+                <a href="#demo">Demo</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('y').textContent = new Date().getFullYear();
+    </script>
+</footer>
+</body>
+</html>
