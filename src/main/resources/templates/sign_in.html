@@ -1,10 +1,20 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign in - PersonGPT</title>
+</head>
+<body>
+
+</body>
+</html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign up — PersonaGPT</title>
-    <meta name="description" content="Create your PersonaGPT account. Choose a role: Recruiter or Job seeker.">
+    <title>Sign in — PersonaGPT</title>
+    <meta name="description" content="Sign in to your PersonaGPT account.">
 
     <link rel="stylesheet" href="/css/styles.css" th:href="@{/css/styles.css}">
 </head>
@@ -18,7 +28,7 @@
             </a>
 
             <div style="display:flex; gap:10px;">
-                <a class="btn btn--ghost" href="/sign_in">Sign in</a>
+                <a class="btn btn--ghost" href="/sign_up">Sign up</a>
             </div>
         </div>
     </div>
@@ -28,9 +38,9 @@
     <div class="container">
         <div class="auth__wrap">
             <div class="auth__head">
-                <h1 class="auth__title">Create your <span class="display">PersonaGPT</span> account</h1>
+                <h1 class="auth__title">Sign in to <span class="display">PersonaGPT</span></h1>
                 <p class="auth__hint">
-                    Sign up to turn a LinkedIn PDF into an AI-powered chat that helps recruiters and job seekers move faster.
+                    Welcome back! Use your email or username to sign in.
                 </p>
             </div>
 
@@ -43,45 +53,16 @@
                 >*</span>
 
                 <div class="card__pad">
-
-
-
-
-                    <form id="signupForm" class="form" method="post" action="/auth/register" novalidate>
+                    <form id="signinForm" class="form" method="post" action="/auth/login" novalidate>
                         <div class="form__grid">
-                            <div class="form__row">
-                                <label for="firstName">First name</label>
-                                <input class="input" id="firstName" name="firstName" type="text" autocomplete="given-name" required>
-                            </div>
-
-                            <div class="form__row">
-                                <label for="lastName">Last name</label>
-                                <input class="input" id="lastName" name="lastName" type="text" autocomplete="family-name" required>
-                            </div>
-
                             <div class="form__row form__row--full">
-                                <label for="email">Email</label>
-                                <input class="input" id="email" name="email" type="email" autocomplete="email" required>
+                                <label for="emailOrUsername">Email or Username</label>
+                                <input class="input" id="emailOrUsername" name="emailOrUsername" type="text" autocomplete="username" placeholder="you@example.com or your_username" required>
                             </div>
-
-                            <div class="form__row form__row--full">
-                                <label for="username">Username</label>
-                                <input class="input" id="username" name="username" type="text" autocomplete="username" required>
-                            </div>
-
 
                             <div class="form__row form__row--full">
                                 <label for="password">Password</label>
-                                <input class="input" id="password" name="password" type="password" autocomplete="new-password" minlength="8" required>
-                            </div>
-
-                            <div class="form__row form__row--full">
-                                <label for="role">Role</label>
-                                <select id="role" name="role" required>
-                                    <option value="" selected disabled>Select your role</option>
-                                    <option value="RECRUITER">Recruiter</option>
-                                    <option value="JOB_SEEKER">Job seeker</option>
-                                </select>
+                                <input class="input" id="password" name="password" type="password" autocomplete="current-password" minlength="8" required>
                             </div>
                         </div>
 
@@ -93,10 +74,9 @@
                                  th:text="${errorMessage}">
                             </div>
 
-                            <button class="btn btn--primary btn--block" type="submit">Next ➔
-                            </button>
+                            <button class="btn btn--primary btn--block" type="submit">Sign in ➔</button>
                             <div class="small-link">
-                                Already have an account? <a href="/sign_in">Sign in</a>
+                                Don't have an account? <a href="/sign_up">Sign up</a>
                             </div>
                         </div>
                     </form>
@@ -113,7 +93,7 @@
             <div>© <span id="y"></span> PersonaGPT</div>
             <div style="display:flex; gap:12px;">
                 <a href="/">Home</a>
-                <a href="/sign_in">Sign in</a>
+                <a href="/sign_up">Sign up</a>
             </div>
         </div>
     </div>
@@ -121,7 +101,7 @@
     <script>
         document.getElementById('y').textContent = new Date().getFullYear();
 
-        const form = document.getElementById('signupForm');
+        const form = document.getElementById('signinForm');
         const indicator = document.getElementById('reqIndicator');
 
         function clearInvalidState() {

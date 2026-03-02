@@ -17,4 +17,9 @@ public class PageController {
         return "sign_up";
     }
 
+    @GetMapping("/sign_in")
+    public String signInPage() {
+        return "sign_in";
+    }
+
 }

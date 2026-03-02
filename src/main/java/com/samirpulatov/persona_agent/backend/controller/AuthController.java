@@ -18,6 +18,7 @@ public class AuthController {
         this.userService = userService;
     }
 
+    //Create a new user or return an error message if a user already exists
     @PostMapping("/register")
     public String register(@ModelAttribute UserRegisterForm form, Model model) {
         try {
