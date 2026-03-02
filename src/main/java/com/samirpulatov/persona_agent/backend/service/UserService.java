@@ -24,10 +24,11 @@ public class UserService {
             String username,
             String rawPassword) {
 
-        if(userRepository.findByUsername(username).isPresent() || userRepository.findByEmail(email).isPresent()) {
+
+        // check if a user already exists
+        if(userExists(username, email)) {
             return false;
         }
-
 
         // create and save a user
         User user = User.builder()
@@ -41,5 +42,9 @@ public class UserService {
         userRepository.save(user);
         return true;
 
+    }
+
+    public boolean userExists(String username, String email) {
+        return userRepository.findByUsername(username).isPresent() || userRepository.findByEmail(email).isPresent();
     }
 }

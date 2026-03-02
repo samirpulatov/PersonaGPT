@@ -6,7 +6,7 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 @Configuration
-// Binds configuration properties with prefix "openai" from application.yaml/properties
+// Binds configuration properties with the prefix "openai" from application.yaml/properties
 @ConfigurationProperties(prefix = "openai")
 public class PersonaAgentConfig {
 
