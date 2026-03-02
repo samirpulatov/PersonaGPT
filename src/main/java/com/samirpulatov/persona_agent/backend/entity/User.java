@@ -18,11 +18,30 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    @NotBlank(message = "Firstname is mandatory")
+    private String firstName;
+
+    @Column(nullable = false)
+    @NotBlank(message = "Lastname is mandatory")
+    private String lastName;
+
+    @Column(nullable = false)
+    @NotBlank(message = "Role is mandatory")
+    private String role;
+
+
     @Column(unique = true, nullable = false)
     @NotBlank(message = "Username is mandatory")
     private String username;
 
+    @Column(unique = true, nullable = false)
+    @NotBlank(message = "Email is mandatory")
+    private String email;
+
     @Column(nullable = false)
-    @NotBlank(message = "Username is mandatory")
+    @NotBlank(message = "Password is mandatory")
     private String password;
+
+
 }

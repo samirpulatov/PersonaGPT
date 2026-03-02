@@ -432,6 +432,18 @@ label{
     box-shadow: 0 0 0 4px var(--danger-soft);
 }
 
+/* --- error alert banner --- */
+.form__alert--error {
+    color: var(--danger);
+    font-size: 18px;
+    font-weight: 700;
+    text-align: center;
+    background: var(--danger-soft);
+    border: 1.5px solid rgba(220, 38, 38, 0.35);
+    border-radius: 12px;
+    padding: 14px 16px;
+}
+
 /* Responsive */
 @media (max-width: 920px){
     .hero__grid{ grid-template-columns: 1fr; }

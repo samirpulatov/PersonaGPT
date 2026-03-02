@@ -16,22 +16,30 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public String registerUser(String firstName, String lastName, String email, String rawPassword, Model model) {
+    public boolean registerUser(
+            String firstName,
+            String lastName,
+            String role,
+            String email,
+            String username,
+            String rawPassword) {
 
-        if(checkUser(firstName,lastName,email,rawPassword)) {
-            return "You have an existing account with " + email;
+        if(userRepository.findByUsername(username).isPresent() || userRepository.findByEmail(email).isPresent()) {
+            return false;
         }
+
+
         // create and save a user
         User user = User.builder()
-                            .username(lastName)
+                            .firstName(firstName)
+                            .lastName(lastName)
+                            .role(role)
+                            .email(email)
+                            .username(username)
                             .password(passwordEncoder.encode(rawPassword))
                             .build();
         userRepository.save(user);
-        return "User registered successfully";
+        return true;
 
-    }
-
-    private boolean checkUser(String firstName,String lastName,String email,String rawPassword) {
-        return userRepository.findByUsername(email).isPresent(); //check if a user exists or not
     }
 }
