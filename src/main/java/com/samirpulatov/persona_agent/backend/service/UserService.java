@@ -1,10 +1,11 @@
 package com.samirpulatov.persona_agent.backend.service;
 
 import com.samirpulatov.persona_agent.backend.entity.User;
+import com.samirpulatov.persona_agent.backend.enums.AccountType;
 import com.samirpulatov.persona_agent.backend.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
+
 
 @Service
 public class UserService {
@@ -19,24 +20,30 @@ public class UserService {
     public boolean registerUser(
             String firstName,
             String lastName,
-            String role,
+            AccountType accountType,
             String email,
             String username,
             String rawPassword) {
 
+        // remove leading and trailing spaces and convert to lowercase
+        String firstNameTrimmed = firstName.trim();
+        String lastNameTrimmed = lastName.trim();
+        String normalizedEmail = email.trim().toLowerCase();
+        String normalizedUsername = username.trim().toLowerCase();
+
 
         // check if a user already exists
-        if(userExists(username, email)) {
+        if(userExists(normalizedUsername, normalizedEmail)) {
             return false;
         }
 
         // create and save a user
         User user = User.builder()
-                            .firstName(firstName)
-                            .lastName(lastName)
-                            .role(role)
-                            .email(email)
-                            .username(username)
+                            .firstName(firstNameTrimmed)
+                            .lastName(lastNameTrimmed)
+                            .accountType(accountType.name())
+                            .email(normalizedEmail)
+                            .username(normalizedUsername)
                             .password(passwordEncoder.encode(rawPassword))
                             .build();
         userRepository.save(user);
@@ -45,6 +52,6 @@ public class UserService {
     }
 
     public boolean userExists(String username, String email) {
-        return userRepository.findByUsername(username).isPresent() || userRepository.findByEmail(email).isPresent();
+        return userRepository.existsByUsername(username) || userRepository.existsByEmail(email);
     }
 }

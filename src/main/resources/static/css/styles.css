@@ -444,6 +444,15 @@ label{
     padding: 14px 16px;
 }
 
+/* --- field-level validation error --- */
+.field-error {
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--danger);
+    font-weight: 500;
+}
+
+
 /* Responsive */
 @media (max-width: 920px){
     .hero__grid{ grid-template-columns: 1fr; }

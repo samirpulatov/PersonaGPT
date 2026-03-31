@@ -1,6 +1,7 @@
 package com.samirpulatov.persona_agent.backend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,8 +28,8 @@ public class User {
     private String lastName;
 
     @Column(nullable = false)
-    @NotBlank(message = "Role is mandatory")
-    private String role;
+    @NotBlank(message = "Please select your account type")
+    private String accountType;
 
 
     @Column(unique = true, nullable = false)
@@ -36,6 +37,7 @@ public class User {
     private String username;
 
     @Column(unique = true, nullable = false)
+    @Email(message = "Email should be valid")
     @NotBlank(message = "Email is mandatory")
     private String email;
 
