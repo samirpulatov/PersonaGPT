@@ -51,61 +51,101 @@
                         <div class="form__grid">
                             <div class="form__row">
                                 <label for="firstName">First name</label>
-                                <input class="input" id="firstName" th:field="*{firstName}"  type="text" autocomplete="given-name" required>
-                                <div th:if="${#fields.hasErrors('firstName')}"
-                                     th:errors="*{firstName}"
-                                     class="field-error">
+                                <input class="input"
+                                       id="firstName"
+                                       th:field="*{firstName}"
+                                       th:classappend="${#fields.hasErrors('firstName')} ? ' is-invalid' : ''"
+                                       type="text"
+                                       autocomplete="given-name"
+                                       minlength="2"
+                                       maxlength="50"
+                                       required>
+                                <div id="firstNameError"
+                                     class="field-error"
+                                     th:text="${#fields.hasErrors('firstName') ? #fields.errors('firstName')[0] : ''}">
                                 </div>
                             </div>
 
 
                             <div class="form__row">
                                 <label for="lastName">Last name</label>
-                                <input class="input" id="lastName" th:field="*{lastName}" type="text" autocomplete="family-name" required>
-                                <div th:if="${#fields.hasErrors('lastName')}"
-                                     th:errors="*{lastName}"
-                                     class="field-error">
+                                <input class="input"
+                                       id="lastName"
+                                       th:field="*{lastName}"
+                                       th:classappend="${#fields.hasErrors('lastName')} ? ' is-invalid' : ''"
+                                       type="text"
+                                       autocomplete="family-name"
+                                       minlength="2"
+                                       maxlength="50"
+                                       required>
+                                <div id="lastNameError"
+                                     class="field-error"
+                                     th:text="${#fields.hasErrors('lastName') ? #fields.errors('lastName')[0] : ''}">
                                 </div>
                             </div>
 
                             <div class="form__row form__row--full">
                                 <label for="email">Email</label>
-                                <input class="input" id="email" th:field="*{email}"  type="email" autocomplete="email" required>
-                                <div th:if="${#fields.hasErrors('email')}"
-                                     th:errors="*{email}"
-                                     class="field-error">
+                                <input class="input"
+                                       id="email"
+                                       th:field="*{email}"
+                                       th:classappend="${#fields.hasErrors('email')} ? ' is-invalid' : ''"
+                                       type="email"
+                                       autocomplete="email"
+                                       required>
+                                <div id="emailError"
+                                     class="field-error"
+                                     th:text="${#fields.hasErrors('email') ? #fields.errors('email')[0] : ''}">
                                 </div>
                             </div>
 
                             <div class="form__row form__row--full">
                                 <label for="username">Username</label>
-                                <input class="input" id="username" th:field="*{username}" type="text" autocomplete="username" required>
-                                <div th:if="${#fields.hasErrors('username')}"
-                                     th:errors="*{username}"
-                                     class="field-error">
+                                <input class="input"
+                                       id="username"
+                                       th:field="*{username}"
+                                       th:classappend="${#fields.hasErrors('username')} ? ' is-invalid' : ''"
+                                       type="text"
+                                       autocomplete="username"
+                                       minlength="3"
+                                       maxlength="50"
+                                       required>
+                                <div id="usernameError"
+                                     class="field-error"
+                                     th:text="${#fields.hasErrors('username') ? #fields.errors('username')[0] : ''}">
                                 </div>
                             </div>
 
 
                             <div class="form__row form__row--full">
                                 <label for="password">Password</label>
-                                <input class="input" id="password"  th:field="*{password}"  type="password" autocomplete="new-password" minlength="6" required>
-                                <div th:if="${#fields.hasErrors('password')}"
-                                     th:errors="*{password}"
-                                     class="field-error">
+                                <input class="input" id="password"
+                                       th:field="*{password}"
+                                       th:classappend="${#fields.hasErrors('password')} ? ' is-invalid' : ''"
+                                       type="password"
+                                       autocomplete="new-password"
+                                       minlength="6"
+                                       maxlength="15"
+                                       required>
+                                <div id="passwordError"
+                                     class="field-error"
+                                     th:text="${#fields.hasErrors('password') ? #fields.errors('password')[0] : ''}">
                                 </div>
                             </div>
 
                             <div class="form__row form__row--full">
                                 <label for="accountType">Account Type</label>
-                                <select id="accountType" th:field="*{accountType}" required>
-                                    <option value="" selected disabled>Select your account type</option>
+                                <select id="accountType"
+                                        th:field="*{accountType}"
+                                        th:classappend="${#fields.hasErrors('accountType')} ? ' is-invalid' : ''"
+                                        required>
+                                    <option value="" disabled>Select your account type</option>
                                     <option value="RECRUITER">Recruiter</option>
                                     <option value="JOB_SEEKER">Job seeker</option>
                                 </select>
-                                <div th:if="${#fields.hasErrors('accountType')}"
-                                     th:errors="*{accountType}"
-                                     class="field-error">
+                                <div id="accountTypeError"
+                                     class="field-error"
+                                     th:text="${#fields.hasErrors('accountType') ? #fields.errors('accountType')[0] : ''}">
                                 </div>
                             </div>
                         </div>
@@ -150,59 +190,139 @@
         const form = document.getElementById('signupForm');
         const indicator = document.getElementById('reqIndicator');
 
-        function clearInvalidState() {
-            form.querySelectorAll('.label-invalid').forEach(l => l.classList.remove('label-invalid'));
-            form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+        function getFields() {
+            return Array.from(form.querySelectorAll('input, select, textarea'));
         }
 
-        function markInvalidFields() {
-            const fields = form.querySelectorAll('input, select, textarea');
+        function getErrorElement(field) {
+            return document.getElementById(field.id + 'Error');
+        }
+
+        function getClientErrorMessage(field) {
+            if (field.validity.valueMissing) {
+                if (field.id === 'firstName') return 'First name is required';
+                if (field.id === 'lastName') return 'Last name is required';
+                if (field.id === 'username') return 'Username is required';
+                if (field.id === 'email') return 'Email is required';
+                if (field.id === 'password') return 'Password is required';
+                if (field.id === 'accountType') return 'Please select an account type';
+                return 'This field is required';
+            }
+
+            if (field.validity.typeMismatch && field.id === 'email') {
+                return 'Please enter a valid email address';
+            }
+
+            if (field.validity.tooShort || field.validity.tooLong) {
+                if (field.id === 'firstName') return 'First name must be between 2 and 50 characters';
+                if (field.id === 'lastName') return 'Last name must be between 2 and 50 characters';
+                if (field.id === 'username') return 'Username must be between 3 and 50 characters';
+                if (field.id === 'password') return 'Password must be between 6 and 15 characters';
+            }
+
+            return '';
+        }
+
+        function updateIndicator() {
+            const hasInvalid = getFields().some(field => field.classList.contains('is-invalid'));
+            indicator.classList.toggle('req-indicator--on', hasInvalid);
+            indicator.title = hasInvalid ? 'Please fix the highlighted fields' : 'All fields are required';
+        }
+
+        function markFieldInvalid(field, message = '') {
+            const label = form.querySelector(`label[for="${field.id}"]`);
+            const errorEl = getErrorElement(field);
+
+            field.classList.add('is-invalid');
+
+            if (label) {
+                label.classList.add('label-invalid');
+            }
+
+            if (errorEl) {
+                errorEl.textContent = message;
+            }
+        }
+
+        function clearFieldInvalid(field) {
+            const label = form.querySelector(`label[for="${field.id}"]`);
+            const errorEl = getErrorElement(field);
+
+            field.classList.remove('is-invalid');
+
+            if (label) {
+                label.classList.remove('label-invalid');
+            }
+
+            if (errorEl) {
+                errorEl.textContent = '';
+            }
+        }
+
+        function markClientInvalidFields() {
             let hasInvalid = false;
 
-            fields.forEach(field => {
-                const label = form.querySelector(`label[for="${field.id}"]`);
-                const invalid = !field.checkValidity();
-
-                if (invalid) {
+            getFields().forEach(field => {
+                if (!field.checkValidity()) {
+                    markFieldInvalid(field, getClientErrorMessage(field));
                     hasInvalid = true;
-                    field.classList.add('is-invalid');
-                    if (label) label.classList.add('label-invalid');
                 }
             });
 
-            indicator.classList.toggle('req-indicator--on', hasInvalid);
-            indicator.title = hasInvalid ? "This field is required" : "All fields are required";
+            updateIndicator();
             return hasInvalid;
         }
 
-        form.addEventListener('submit', (e) => {
-            clearInvalidState();
+        function applyServerValidationState() {
+            getFields().forEach(field => {
+                if (field.classList.contains('is-invalid')) {
+                    const label = form.querySelector(`label[for="${field.id}"]`);
+                    if (label) {
+                        label.classList.add('label-invalid');
+                    }
+                }
+            });
 
-            if (!form.checkValidity()) {
-                e.preventDefault();
-                markInvalidFields();
-                return;
+            updateIndicator();
+        }
+
+        function validateSingleField(field) {
+            if (field.checkValidity()) {
+                clearFieldInvalid(field);
+            } else {
+                markFieldInvalid(field, getClientErrorMessage(field));
             }
 
-            indicator.classList.remove('req-indicator--on');
-            indicator.title = "All fields are required";
+            updateIndicator();
+        }
+
+        form.addEventListener('submit', (e) => {
+            const hasClientErrors = markClientInvalidFields();
+
+            if (hasClientErrors) {
+                e.preventDefault();
+            }
         });
 
         form.addEventListener('input', (e) => {
             const field = e.target;
-            if (!(field instanceof HTMLElement)) return;
-            if (!('checkValidity' in field)) return;
-
-            if (field.checkValidity()) {
-                field.classList.remove('is-invalid');
-                const label = form.querySelector(`label[for="${field.id}"]`);
-                if (label) label.classList.remove('label-invalid');
-
-                const stillInvalid = Array.from(form.querySelectorAll('input, select, textarea'))
-                    .some(f => !f.checkValidity());
-                indicator.classList.toggle('req-indicator--on', stillInvalid);
+            if (!(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement)) {
+                return;
             }
+
+            validateSingleField(field);
         });
+
+        form.addEventListener('change', (e) => {
+            const field = e.target;
+            if (!(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement)) {
+                return;
+            }
+
+            validateSingleField(field);
+        });
+
+        applyServerValidationState();
     </script>
 </footer>
 </body>

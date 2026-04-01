@@ -36,7 +36,7 @@ public class AuthController {
 
         // Check if the form is valid or contains errors
         if(bindingResult.hasErrors()) {
-           model.addAttribute("form", form);
+           model.addAttribute("form", removePasswordFromRegisterForm(form));
            return "sign_up";
         }
 
@@ -54,14 +54,14 @@ public class AuthController {
 
             if (!created) {
                 model.addAttribute("errorMessage", "A user with this email or username already exists.");
-                model.addAttribute("form", form);
+                model.addAttribute("form", removePasswordFromRegisterForm(form));
                 return "sign_up";
             }
 
-            return "redirect:/sign_in";
+            return "redirect:/auth/login";
         } catch (DataIntegrityViolationException e) {
             model.addAttribute("errorMessage", "Could not register user. Email or username may already be in use.");
-            model.addAttribute("form", form);
+            model.addAttribute("form", removePasswordFromRegisterForm(form));
             return "sign_up";
         }
     }
@@ -78,5 +78,17 @@ public class AuthController {
 
         return "redirect:/welcome";
 
+    }
+
+    //Removes the password before sending the form back to the frontend
+    private UserRegisterForm removePasswordFromRegisterForm(UserRegisterForm form) {
+        return new UserRegisterForm(
+                form.firstName(),
+                form.lastName(),
+                form.username(),
+                form.email(),
+                "",
+                form.accountType()
+        );
     }
 }
