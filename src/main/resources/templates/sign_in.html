@@ -28,7 +28,7 @@
             </a>
 
             <div style="display:flex; gap:10px;">
-                <a class="btn btn--ghost" href="/sign_up">Sign up</a>
+                <a class="btn btn--ghost" th:href="@{/auth/register}">Sign up</a>
             </div>
         </div>
     </div>
@@ -53,7 +53,7 @@
                 >*</span>
 
                 <div class="card__pad">
-                    <form id="signinForm" class="form" method="post" action="/auth/login" novalidate>
+                    <form id="signinForm" class="form" method="post" th:action="@{/auth/login}" novalidate>
                         <div class="form__grid">
                             <div class="form__row form__row--full">
                                 <label for="emailOrUsername">Email or Username</label>
@@ -62,7 +62,7 @@
 
                             <div class="form__row form__row--full">
                                 <label for="password">Password</label>
-                                <input class="input" id="password" name="password" type="password" autocomplete="current-password" minlength="8" required>
+                                <input class="input" id="password" name="password" type="password" autocomplete="current-password" minlength="6" required>
                             </div>
                         </div>
 
@@ -76,7 +76,7 @@
 
                             <button class="btn btn--primary btn--block" type="submit">Sign in ➔</button>
                             <div class="small-link">
-                                Don't have an account? <a href="/sign_up">Sign up</a>
+                                Don't have an account? <a th:href="@{/auth/register}">Sign up</a>
                             </div>
                         </div>
                     </form>
@@ -93,7 +93,7 @@
             <div>© <span id="y"></span> PersonaGPT</div>
             <div style="display:flex; gap:12px;">
                 <a href="/">Home</a>
-                <a href="/sign_up">Sign up</a>
+                <a th:href="@{/auth/register}">Sign up</a>
             </div>
         </div>
     </div>

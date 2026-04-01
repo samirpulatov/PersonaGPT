@@ -66,12 +66,20 @@ public class AuthController {
         }
     }
 
+
+    @GetMapping("/login")
+    public String showLoginForm(Model model) {
+        model.addAttribute("form", new UserLoginForm("",""));
+        return "sign_in";
+    }
+
+
     @PostMapping("/login")
     public String login(@ModelAttribute UserLoginForm form,Model model) {
 
-        boolean userExists = userService.userExists(form.username(),form.email());
+        boolean authenticate = userService.authenticateUser(form.login(), form.password());
 
-        if(!userExists) {
+        if(!authenticate) {
             model.addAttribute("errorMessage", "A user with this email or username does not exist. Please register first.");
             return "sign_in";
         }

@@ -6,6 +6,8 @@ import com.samirpulatov.persona_agent.backend.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 public class UserService {
@@ -53,5 +55,10 @@ public class UserService {
 
     public boolean userExists(String username, String email) {
         return userRepository.existsByUsername(username) || userRepository.existsByEmail(email);
+    }
+
+    public boolean authenticateUser(String login, String password)  {
+        Optional<User> user = login.contains("@") ? userRepository.findByEmail(login) : userRepository.findByUsername(login);
+        return user.isPresent() && passwordEncoder.matches(password, user.get().getPassword());
     }
 }
