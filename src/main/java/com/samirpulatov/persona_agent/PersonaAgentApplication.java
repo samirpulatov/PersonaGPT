@@ -10,6 +10,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Base64;
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
@@ -19,7 +20,8 @@ public class PersonaAgentApplication implements CommandLineRunner {
     private final static Logger LOGGER = LoggerFactory.getLogger(PersonaAgentApplication.class);
 
 	public static void main(String[] args) {
-        System.setProperty("java.awt.headless", "false"); // set headless to false so that browser can be opened
+
+        System.setProperty("java.awt.headless", "false"); // set headless to false so that the browser can be opened
 		SpringApplication.run(PersonaAgentApplication.class, args);
 	}
 

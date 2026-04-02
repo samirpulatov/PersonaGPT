@@ -1,30 +1,93 @@
 package com.samirpulatov.persona_agent.backend.configuration;
 
+import com.samirpulatov.persona_agent.backend.filter.JwtAuthFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@Slf4j
 @Configuration
 public class SecurityConfig {
 
+    private final JwtAuthFilter jwtAuthFilter;
+    private final UserDetailsService userDetailsService;
+
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter, UserDetailsService userDetailsService) {
+        this.jwtAuthFilter = jwtAuthFilter;
+        this.userDetailsService = userDetailsService;
+    }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
+                // Disable CSRF (cross site request forgery)
                 .csrf(AbstractHttpConfigurer::disable)
 
-                .authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll());
+                //Configure endpoint authorization
+                .authorizeHttpRequests(auth -> auth
+                    //Public endpoints
+                        .requestMatchers("/auth/register", "/auth/login").permitAll()
+
+                    //Role-based endpoints
+
+                    //All other endpoints require authentication
+                        .anyRequest().authenticated()
+                )
+
+                //Stateless session (required for JWT)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                //Set a custom authentication provider
+                .authenticationProvider(authenticationProvider());
+
+                //Add Jwt authentication filter before Spring Security's default authentication filter
+                http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-
+    /*
+     * Password encoder bean (uses BCrypt hashing)
+     * Critical for secure password storage
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    /*
+     * Authentication provider configuration
+     * Links UserDetailsService and PasswordEncoder
+     */
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
+    }
+
+    /*
+     * Authentication manager bean
+     * Required for programmatic authentication (e.g., in /generateToken)
+     */
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception{
+        return config.getAuthenticationManager();
+    }
+
 
 }
