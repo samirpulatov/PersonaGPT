@@ -2,101 +2,76 @@ package com.samirpulatov.persona_agent.backend.controller;
 
 import com.samirpulatov.persona_agent.backend.dto.UserLoginForm;
 import com.samirpulatov.persona_agent.backend.dto.UserRegisterForm;
+import com.samirpulatov.persona_agent.backend.service.CustomUserDetails;
+import com.samirpulatov.persona_agent.backend.service.JwtService;
 import com.samirpulatov.persona_agent.backend.service.UserService;
 
 import jakarta.validation.Valid;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
-@RequestMapping("/auth")
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final UserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, AuthenticationManager authenticationManager, JwtService jwtService) {
         this.userService = userService;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
-    // Method called when the user visits the sign-in page to display the login form
-    @GetMapping("/register")
-    public String showRegisterForm(Model model) {
-        model.addAttribute("form", new UserRegisterForm("","","","","",null));
-        return "sign_up";
-    }
 
-    //Create a new user or return an error message if a user already exists
     @PostMapping("/register")
-    public String register(@Valid @ModelAttribute("form") UserRegisterForm form,
-                           BindingResult bindingResult,
-                           Model model) {
+    public ResponseEntity<?> register(@Valid @RequestBody UserRegisterForm form) {
 
-        // Check if the form is valid or contains errors
-        if(bindingResult.hasErrors()) {
-           model.addAttribute("form", removePasswordFromRegisterForm(form));
-           return "sign_up";
+        boolean created = userService.registerUser(
+                form.firstName(),
+                form.lastName(),
+                form.accountType(),
+                form.email(),
+                form.username(),
+                form.password()
+        );
+        if (!created) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(Map.of("conflict","A user with this email or username already exists"));
         }
 
-
-        try {
-            boolean created = userService.registerUser(
-                    form.firstName(),
-                    form.lastName(),
-                    form.accountType(),
-                    form.email(),
-                    form.username(),
-                    form.password()
-            );
-
-
-            if (!created) {
-                model.addAttribute("errorMessage", "A user with this email or username already exists.");
-                model.addAttribute("form", removePasswordFromRegisterForm(form));
-                return "sign_up";
-            }
-
-            return "redirect:/auth/login";
-        } catch (DataIntegrityViolationException e) {
-            model.addAttribute("errorMessage", "Could not register user. Email or username may already be in use.");
-            model.addAttribute("form", removePasswordFromRegisterForm(form));
-            return "sign_up";
-        }
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(Map.of("message","User registered successfully"));
     }
 
 
-    @GetMapping("/login")
-    public String showLoginForm(Model model) {
-        model.addAttribute("form", new UserLoginForm("",""));
-        return "sign_in";
-    }
 
 
     @PostMapping("/login")
-    public String login(@ModelAttribute UserLoginForm form,Model model) {
+    public ResponseEntity<?> login(@Valid @RequestBody UserLoginForm form) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(form.login(), form.password())
+        );
 
-        boolean authenticate = userService.authenticateUser(form.login(), form.password());
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        String token = jwtService.generateToken(userDetails.getUsername()); //getUsername() returns the email
 
-        if(!authenticate) {
-            model.addAttribute("errorMessage", "A user with this email or username does not exist. Please register first.");
-            return "sign_in";
-        }
-
-        return "redirect:/welcome";
-
-    }
-
-    //Removes the password before sending the form back to the frontend
-    private UserRegisterForm removePasswordFromRegisterForm(UserRegisterForm form) {
-        return new UserRegisterForm(
-                form.firstName(),
-                form.lastName(),
-                form.username(),
-                form.email(),
-                "",
-                form.accountType()
+        return ResponseEntity.ok(
+                Map.of(
+                        "token", token,
+                        "email", userDetails.getUsername(),
+                        "username", userDetails.getRealUserName(),
+                        "accountType", userDetails.getAccountType()
+                )
         );
     }
 }

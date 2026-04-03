@@ -2,11 +2,11 @@ package com.samirpulatov.persona_agent.backend.configuration;
 
 import com.samirpulatov.persona_agent.backend.filter.JwtAuthFilter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.security.autoconfigure.web.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,10 +24,13 @@ public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
     private final UserDetailsService userDetailsService;
+    private final PasswordEncoder passwordEncoder;
 
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter, UserDetailsService userDetailsService) {
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter, UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         this.jwtAuthFilter = jwtAuthFilter;
         this.userDetailsService = userDetailsService;
+
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Bean
@@ -40,7 +43,11 @@ public class SecurityConfig {
                 //Configure endpoint authorization
                 .authorizeHttpRequests(auth -> auth
                     //Public endpoints
-                        .requestMatchers("/auth/register", "/auth/login").permitAll()
+                        .requestMatchers("/","/index.html", "/sign_in.html","/sign_up.html", "/error").permitAll()
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
+
+
 
                     //Role-based endpoints
 
@@ -60,14 +67,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    /*
-     * Password encoder bean (uses BCrypt hashing)
-     * Critical for secure password storage
-     */
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+
 
     /*
      * Authentication provider configuration
@@ -76,7 +76,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
+        provider.setPasswordEncoder(passwordEncoder);
         return provider;
     }
 

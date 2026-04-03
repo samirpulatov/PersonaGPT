@@ -3,6 +3,7 @@ package com.samirpulatov.persona_agent.backend.service;
 import com.samirpulatov.persona_agent.backend.entity.User;
 import com.samirpulatov.persona_agent.backend.enums.AccountType;
 import com.samirpulatov.persona_agent.backend.repository.UserRepository;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -61,4 +62,12 @@ public class UserService {
         Optional<User> user = login.contains("@") ? userRepository.findByEmail(login) : userRepository.findByUsername(login);
         return user.isPresent() && passwordEncoder.matches(password, user.get().getPassword());
     }
+
+    public User findByLogin(String login) {
+        return userRepository.findByEmail(login)
+                .or(()->userRepository.findByUsername(login))
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+
 }
