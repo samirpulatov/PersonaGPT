@@ -1,24 +1,24 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign up — PersonaGPT</title>
     <meta name="description" content="Create your PersonaGPT account. Choose a role: Recruiter or Job seeker.">
 
-    <link rel="stylesheet" href="/css/styles.css" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 <header class="header">
     <div class="container">
         <div class="header__inner">
-            <a class="brand" href="/src/main/staticin/static" aria-label="Go to home">
+            <a class="brand" href="/" aria-label="Go to home">
                 <span class="logo" aria-hidden="true"></span>
                 <span class="brand__name">PersonaGPT</span>
             </a>
 
             <div style="display:flex; gap:10px;">
-                <a class="btn btn--ghost" th:href="@{/auth/login}">Sign in</a>
+                <a class="btn btn--ghost" href="/sign_in">Sign in</a>
             </div>
         </div>
     </div>
@@ -34,6 +34,22 @@
                 </p>
             </div>
 
+            <div id="successScreen" class="success-screen" aria-live="polite" style="display:none;">
+                <div class="success-screen__card">
+                    <div class="success-screen__badge">PersonaGPT</div>
+                    <div class="success-screen__icon-wrap">
+                        <div class="success-screen__check">✓</div>
+                    </div>
+                    <h2 class="success-screen__title">Your PersonaGPT-account was created</h2>
+                    <p class="success-screen__text">
+                        Redirecting you to sign in...
+                    </p>
+                    <div class="success-screen__loader">
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+
             <div class="card">
                 <span
                         id="reqIndicator"
@@ -43,125 +59,86 @@
                 >*</span>
 
                 <div class="card__pad">
-
-
-
-
-                    <form id="signupForm" class="form" method="post" th:action="@{/auth/register}" th:object="${form}" novalidate>
+                    <form id="signupForm" class="form" novalidate>
                         <div class="form__grid">
                             <div class="form__row">
                                 <label for="firstName">First name</label>
                                 <input class="input"
                                        id="firstName"
-                                       th:field="*{firstName}"
-                                       th:classappend="${#fields.hasErrors('firstName')} ? ' is-invalid' : ''"
                                        type="text"
                                        autocomplete="given-name"
                                        minlength="2"
                                        maxlength="50"
                                        required>
-                                <div id="firstNameError"
-                                     class="field-error"
-                                     th:text="${#fields.hasErrors('firstName') ? #fields.errors('firstName')[0] : ''}">
-                                </div>
+                                <div id="firstNameError" class="field-error"></div>
                             </div>
-
 
                             <div class="form__row">
                                 <label for="lastName">Last name</label>
                                 <input class="input"
                                        id="lastName"
-                                       th:field="*{lastName}"
-                                       th:classappend="${#fields.hasErrors('lastName')} ? ' is-invalid' : ''"
                                        type="text"
                                        autocomplete="family-name"
                                        minlength="2"
                                        maxlength="50"
                                        required>
-                                <div id="lastNameError"
-                                     class="field-error"
-                                     th:text="${#fields.hasErrors('lastName') ? #fields.errors('lastName')[0] : ''}">
-                                </div>
+                                <div id="lastNameError" class="field-error"></div>
                             </div>
 
                             <div class="form__row form__row--full">
                                 <label for="email">Email</label>
                                 <input class="input"
                                        id="email"
-                                       th:field="*{email}"
-                                       th:classappend="${#fields.hasErrors('email')} ? ' is-invalid' : ''"
                                        type="email"
                                        autocomplete="email"
                                        required>
-                                <div id="emailError"
-                                     class="field-error"
-                                     th:text="${#fields.hasErrors('email') ? #fields.errors('email')[0] : ''}">
-                                </div>
+                                <div id="emailError" class="field-error"></div>
                             </div>
 
                             <div class="form__row form__row--full">
                                 <label for="username">Username</label>
                                 <input class="input"
                                        id="username"
-                                       th:field="*{username}"
-                                       th:classappend="${#fields.hasErrors('username')} ? ' is-invalid' : ''"
                                        type="text"
                                        autocomplete="username"
                                        minlength="3"
                                        maxlength="50"
                                        required>
-                                <div id="usernameError"
-                                     class="field-error"
-                                     th:text="${#fields.hasErrors('username') ? #fields.errors('username')[0] : ''}">
-                                </div>
+                                <div id="usernameError" class="field-error"></div>
                             </div>
-
 
                             <div class="form__row form__row--full">
                                 <label for="password">Password</label>
-                                <input class="input" id="password"
-                                       th:field="*{password}"
-                                       th:classappend="${#fields.hasErrors('password')} ? ' is-invalid' : ''"
+                                <input class="input"
+                                       id="password"
                                        type="password"
                                        autocomplete="new-password"
                                        minlength="6"
                                        maxlength="15"
                                        required>
-                                <div id="passwordError"
-                                     class="field-error"
-                                     th:text="${#fields.hasErrors('password') ? #fields.errors('password')[0] : ''}">
-                                </div>
+                                <div id="passwordError" class="field-error"></div>
                             </div>
 
                             <div class="form__row form__row--full">
                                 <label for="accountType">Account Type</label>
-                                <select id="accountType"
-                                        th:field="*{accountType}"
-                                        th:classappend="${#fields.hasErrors('accountType')} ? ' is-invalid' : ''"
-                                        required>
-                                    <option value="" disabled>Select your account type</option>
+                                <select id="accountType" required>
+                                    <option value="" selected disabled>Select your account type</option>
                                     <option value="RECRUITER">Recruiter</option>
                                     <option value="JOB_SEEKER">Job seeker</option>
                                 </select>
-                                <div id="accountTypeError"
-                                     class="field-error"
-                                     th:text="${#fields.hasErrors('accountType') ? #fields.errors('accountType')[0] : ''}">
-                                </div>
+                                <div id="accountTypeError" class="field-error"></div>
                             </div>
                         </div>
 
                         <div class="form__actions">
-                            <!-- 🔴 ERROR MESSAGE -->
-                            <div th:if="${errorMessage}"
-                                 class="form__alert form__alert--error"
-                                 role="alert"
-                                 th:text="${errorMessage}">
-                            </div>
+                            <div id="formMessage" class="form__alert" style="display:none;" role="alert"></div>
 
-                            <button class="btn btn--primary btn--block" type="submit">Next ➔
+                            <button id="submitBtn" class="btn btn--primary btn--block" type="submit">
+                                Next ➔
                             </button>
+
                             <div class="small-link">
-                                Already have an account? <a th:href="@{/auth/login}">Sign in</a>
+                                Already have an account? <a href="/sign_in">Sign in</a>
                             </div>
                         </div>
                     </form>
@@ -177,153 +154,227 @@
         <div class="footer__row">
             <div>© <span id="y"></span> PersonaGPT</div>
             <div style="display:flex; gap:12px;">
-                <a href="/src/main/staticin/static">Home</a>
-                <a th:href="@{/auth/login}">Sign in</a>
+                <a href="/">Home</a>
+                <a href="/sign_in">Sign in</a>
             </div>
         </div>
     </div>
-
-
-    <script>
-        document.getElementById('y').textContent = new Date().getFullYear();
-
-        const form = document.getElementById('signupForm');
-        const indicator = document.getElementById('reqIndicator');
-
-        function getFields() {
-            return Array.from(form.querySelectorAll('input, select, textarea'));
-        }
-
-        function getErrorElement(field) {
-            return document.getElementById(field.id + 'Error');
-        }
-
-        function getClientErrorMessage(field) {
-            if (field.validity.valueMissing) {
-                if (field.id === 'firstName') return 'First name is required';
-                if (field.id === 'lastName') return 'Last name is required';
-                if (field.id === 'username') return 'Username is required';
-                if (field.id === 'email') return 'Email is required';
-                if (field.id === 'password') return 'Password is required';
-                if (field.id === 'accountType') return 'Please select an account type';
-                return 'This field is required';
-            }
-
-            if (field.validity.typeMismatch && field.id === 'email') {
-                return 'Please enter a valid email address';
-            }
-
-            if (field.validity.tooShort || field.validity.tooLong) {
-                if (field.id === 'firstName') return 'First name must be between 2 and 50 characters';
-                if (field.id === 'lastName') return 'Last name must be between 2 and 50 characters';
-                if (field.id === 'username') return 'Username must be between 3 and 50 characters';
-                if (field.id === 'password') return 'Password must be between 6 and 15 characters';
-            }
-
-            return '';
-        }
-
-        function updateIndicator() {
-            const hasInvalid = getFields().some(field => field.classList.contains('is-invalid'));
-            indicator.classList.toggle('req-indicator--on', hasInvalid);
-            indicator.title = hasInvalid ? 'Please fix the highlighted fields' : 'All fields are required';
-        }
-
-        function markFieldInvalid(field, message = '') {
-            const label = form.querySelector(`label[for="${field.id}"]`);
-            const errorEl = getErrorElement(field);
-
-            field.classList.add('is-invalid');
-
-            if (label) {
-                label.classList.add('label-invalid');
-            }
-
-            if (errorEl) {
-                errorEl.textContent = message;
-            }
-        }
-
-        function clearFieldInvalid(field) {
-            const label = form.querySelector(`label[for="${field.id}"]`);
-            const errorEl = getErrorElement(field);
-
-            field.classList.remove('is-invalid');
-
-            if (label) {
-                label.classList.remove('label-invalid');
-            }
-
-            if (errorEl) {
-                errorEl.textContent = '';
-            }
-        }
-
-        function markClientInvalidFields() {
-            let hasInvalid = false;
-
-            getFields().forEach(field => {
-                if (!field.checkValidity()) {
-                    markFieldInvalid(field, getClientErrorMessage(field));
-                    hasInvalid = true;
-                }
-            });
-
-            updateIndicator();
-            return hasInvalid;
-        }
-
-        function applyServerValidationState() {
-            getFields().forEach(field => {
-                if (field.classList.contains('is-invalid')) {
-                    const label = form.querySelector(`label[for="${field.id}"]`);
-                    if (label) {
-                        label.classList.add('label-invalid');
-                    }
-                }
-            });
-
-            updateIndicator();
-        }
-
-        function validateSingleField(field) {
-            if (field.checkValidity()) {
-                clearFieldInvalid(field);
-            } else {
-                markFieldInvalid(field, getClientErrorMessage(field));
-            }
-
-            updateIndicator();
-        }
-
-        form.addEventListener('submit', (e) => {
-            const hasClientErrors = markClientInvalidFields();
-
-            if (hasClientErrors) {
-                e.preventDefault();
-            }
-        });
-
-        form.addEventListener('input', (e) => {
-            const field = e.target;
-            if (!(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement)) {
-                return;
-            }
-
-            validateSingleField(field);
-        });
-
-        form.addEventListener('change', (e) => {
-            const field = e.target;
-            if (!(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement)) {
-                return;
-            }
-
-            validateSingleField(field);
-        });
-
-        applyServerValidationState();
-    </script>
 </footer>
+
+<script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    const form = document.getElementById('signupForm');
+    const indicator = document.getElementById('reqIndicator');
+    const formMessage = document.getElementById('formMessage');
+    const submitBtn = document.getElementById('submitBtn');
+    const successScreen = document.getElementById('successScreen');
+    const card = document.querySelector('.card');
+    const authHead = document.querySelector('.auth__head');
+
+
+    function getFields() {
+        return Array.from(form.querySelectorAll('input, select, textarea'));
+    }
+
+    function showSuccessScreen() {
+        if (card) {
+            card.style.display = 'none';
+        }
+
+        if (authHead) {
+            authHead.style.display = 'none';
+        }
+
+        successScreen.style.display = 'flex';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+
+
+    function getErrorElement(field) {
+        return document.getElementById(field.id + 'Error');
+    }
+
+    function getClientErrorMessage(field) {
+        if (field.validity.valueMissing) {
+            if (field.id === 'firstName') return 'First name is required';
+            if (field.id === 'lastName') return 'Last name is required';
+            if (field.id === 'username') return 'Username is required';
+            if (field.id === 'email') return 'Email is required';
+            if (field.id === 'password') return 'Password is required';
+            if (field.id === 'accountType') return 'Please select an account type';
+            return 'This field is required';
+        }
+
+        if (field.validity.typeMismatch && field.id === 'email') {
+            return 'Please enter a valid email address';
+        }
+
+        if (field.validity.tooShort || field.validity.tooLong) {
+            if (field.id === 'firstName') return 'First name must be between 2 and 50 characters';
+            if (field.id === 'lastName') return 'Last name must be between 2 and 50 characters';
+            if (field.id === 'username') return 'Username must be between 3 and 50 characters';
+            if (field.id === 'password') return 'Password must be between 6 and 15 characters';
+        }
+
+        return '';
+    }
+
+    function updateIndicator() {
+        const hasInvalid = getFields().some(field => field.classList.contains('is-invalid'));
+        indicator.classList.toggle('req-indicator--on', hasInvalid);
+        indicator.title = hasInvalid ? 'Please fix the highlighted fields' : 'All fields are required';
+    }
+
+    function markFieldInvalid(field, message = '') {
+        const label = form.querySelector(`label[for="${field.id}"]`);
+        const errorEl = getErrorElement(field);
+
+        field.classList.add('is-invalid');
+
+        if (label) {
+            label.classList.add('label-invalid');
+        }
+
+        if (errorEl) {
+            errorEl.textContent = message;
+        }
+    }
+
+    function clearFieldInvalid(field) {
+        const label = form.querySelector(`label[for="${field.id}"]`);
+        const errorEl = getErrorElement(field);
+
+        field.classList.remove('is-invalid');
+
+        if (label) {
+            label.classList.remove('label-invalid');
+        }
+
+        if (errorEl) {
+            errorEl.textContent = '';
+        }
+    }
+
+    function markClientInvalidFields() {
+        let hasInvalid = false;
+
+        getFields().forEach(field => {
+            if (!field.checkValidity()) {
+                markFieldInvalid(field, getClientErrorMessage(field));
+                hasInvalid = true;
+            }
+        });
+
+        updateIndicator();
+        return hasInvalid;
+    }
+
+    function validateSingleField(field) {
+        if (field.checkValidity()) {
+            clearFieldInvalid(field);
+        } else {
+            markFieldInvalid(field, getClientErrorMessage(field));
+        }
+
+        updateIndicator();
+    }
+
+    function showMessage(message, isError = true) {
+        formMessage.style.display = 'block';
+        formMessage.textContent = message;
+        formMessage.className = isError
+            ? 'form__alert form__alert--error'
+            : 'form__alert form__alert--success';
+    }
+
+    function clearMessage() {
+        formMessage.style.display = 'none';
+        formMessage.textContent = '';
+        formMessage.className = 'form__alert';
+    }
+
+    form.addEventListener('input', (e) => {
+        const field = e.target;
+        if (!(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement)) {
+            return;
+        }
+        validateSingleField(field);
+    });
+
+    form.addEventListener('change', (e) => {
+        const field = e.target;
+        if (!(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement)) {
+            return;
+        }
+        validateSingleField(field);
+    });
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        clearMessage();
+
+        const hasClientErrors = markClientInvalidFields();
+        if (hasClientErrors) return;
+
+        const payload = {
+            firstName: document.getElementById('firstName').value.trim(),
+            lastName: document.getElementById('lastName').value.trim(),
+            accountType: document.getElementById('accountType').value,
+            email: document.getElementById('email').value.trim(),
+            username: document.getElementById('username').value.trim(),
+            password: document.getElementById('password').value,
+
+        };
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Signing up...';
+
+        try {
+            const response = await fetch('http://localhost:8080/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+
+            const contentType = response.headers.get('content-type') || '';
+            let data = null;
+
+            if (contentType.includes('application/json')) {
+                data = await response.json();
+            } else {
+                data = await response.text();
+            }
+
+            if (response.ok) {
+                showSuccessScreen();
+
+                form.reset();
+                updateIndicator();
+
+                setTimeout(() => {
+                    window.location.href = '/sign_in';
+                }, 2000);
+            } else {
+                if (typeof data === 'object' && data !== null) {
+                    showMessage(data.message || 'Registration failed');
+                } else {
+                    showMessage(data || 'Registration failed');
+                }
+            }
+        } catch (error) {
+            showMessage('Cannot connect to server. Check that backend is running on localhost:8080');
+            console.error('Register error:', error);
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Next ➔';
+        }
+    });
+
+    updateIndicator();
+</script>
 </body>
 </html>

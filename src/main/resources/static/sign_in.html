@@ -9,26 +9,26 @@
 </body>
 </html>
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" >
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign in — PersonaGPT</title>
     <meta name="description" content="Sign in to your PersonaGPT account.">
 
-    <link rel="stylesheet" href="/css/styles.css" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
 <header class="header">
     <div class="container">
         <div class="header__inner">
-            <a class="brand" href="/src/main/staticin/static" aria-label="Go to home">
+            <a class="brand" href="/" aria-label="Go to home">
                 <span class="logo" aria-hidden="true"></span>
                 <span class="brand__name">PersonaGPT</span>
             </a>
 
             <div style="display:flex; gap:10px;">
-                <a class="btn btn--ghost" th:href="@{/auth/register}">Sign up</a>
+                <a class="btn btn--ghost" href="/sign_up">Sign up</a>
             </div>
         </div>
     </div>
@@ -53,11 +53,11 @@
                 >*</span>
 
                 <div class="card__pad">
-                    <form id="signinForm" class="form" method="post" th:action="@{/auth/login}" novalidate>
+                    <form id="signinForm" class="form"  novalidate>
                         <div class="form__grid">
                             <div class="form__row form__row--full">
-                                <label for="emailOrUsername">Email or Username</label>
-                                <input class="input" id="emailOrUsername" name="emailOrUsername" type="text" autocomplete="username" placeholder="you@example.com or your_username" required>
+                                <label for="login">Email or Username</label>
+                                <input class="input" id="login" name="login" type="text" autocomplete="username" placeholder="you@example.com or your_username" required>
                             </div>
 
                             <div class="form__row form__row--full">
@@ -68,15 +68,10 @@
 
                         <div class="form__actions">
                             <!-- 🔴 ERROR MESSAGE -->
-                            <div th:if="${errorMessage}"
-                                 class="form__alert form__alert--error"
-                                 role="alert"
-                                 th:text="${errorMessage}">
-                            </div>
-
+                            <div id="formMessage" class="form__alert" style="display:none;" role="alert"></div>
                             <button class="btn btn--primary btn--block" type="submit">Sign in ➔</button>
                             <div class="small-link">
-                                Don't have an account? <a th:href="@{/auth/register}">Sign up</a>
+                                Don't have an account? <a href="/sign_up">Sign up</a>
                             </div>
                         </div>
                     </form>
@@ -92,8 +87,8 @@
         <div class="footer__row">
             <div>© <span id="y"></span> PersonaGPT</div>
             <div style="display:flex; gap:12px;">
-                <a href="/src/main/staticin/static">Home</a>
-                <a th:href="@{/auth/register}">Sign up</a>
+                <a href="/">Home</a>
+                <a href="/sign_up">Sign up</a>
             </div>
         </div>
     </div>
@@ -103,14 +98,24 @@
 
         const form = document.getElementById('signinForm');
         const indicator = document.getElementById('reqIndicator');
+        const submitBtn = form.querySelector('button');
+        const formMessage = document.getElementById('formMessage');
 
-        function clearInvalidState() {
-            form.querySelectorAll('.label-invalid').forEach(l => l.classList.remove('label-invalid'));
-            form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+        function showMessage(message, isError = true) {
+            formMessage.style.display = 'block';
+            formMessage.textContent = message;
+            formMessage.className = isError
+                ? 'form__alert form__alert--error'
+                : 'form__alert form__alert--success';
+        }
+
+        function clearMessage() {
+            formMessage.style.display = 'none';
+            formMessage.textContent = '';
         }
 
         function markInvalidFields() {
-            const fields = form.querySelectorAll('input, select, textarea');
+            const fields = form.querySelectorAll('input');
             let hasInvalid = false;
 
             fields.forEach(field => {
@@ -124,37 +129,56 @@
                 }
             });
 
-            indicator.classList.toggle('req-indicator--on', hasInvalid);
-            indicator.title = hasInvalid ? "This field is required" : "All fields are required";
             return hasInvalid;
         }
 
-        form.addEventListener('submit', (e) => {
-            clearInvalidState();
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            clearMessage();
 
-            if (!form.checkValidity()) {
-                e.preventDefault();
-                markInvalidFields();
-                return;
-            }
+            if (markInvalidFields()) return;
 
-            indicator.classList.remove('req-indicator--on');
-            indicator.title = "All fields are required";
-        });
+            const payload = {
+                login: document.getElementById('login').value.trim(),
+                password: document.getElementById('password').value
+            };
 
-        form.addEventListener('input', (e) => {
-            const field = e.target;
-            if (!(field instanceof HTMLElement)) return;
-            if (!('checkValidity' in field)) return;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Signing in...';
 
-            if (field.checkValidity()) {
-                field.classList.remove('is-invalid');
-                const label = form.querySelector(`label[for="${field.id}"]`);
-                if (label) label.classList.remove('label-invalid');
+            try {
+                const response = await fetch('http://localhost:8080/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
 
-                const stillInvalid = Array.from(form.querySelectorAll('input, select, textarea'))
-                    .some(f => !f.checkValidity());
-                indicator.classList.toggle('req-indicator--on', stillInvalid);
+                const data = await response.json();
+
+                if (response.ok) {
+                    if (data.token) {
+                        localStorage.setItem('token', data.token);
+                    }
+
+
+                    showMessage('Welcome back! Redirecting...', false);
+
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 1000);
+
+                } else {
+                    showMessage(data.message || 'Invalid credentials');
+                }
+
+            } catch (error) {
+                showMessage('Server error. Try again later.');
+                console.error(error);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Sign in ➔';
             }
         });
     </script>
