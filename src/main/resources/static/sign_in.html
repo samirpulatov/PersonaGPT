@@ -162,12 +162,13 @@
                         localStorage.setItem('token', data.token);
                     }
 
-
-                    showMessage('Welcome back! Redirecting...', false);
-
-                    setTimeout(() => {
-                        window.location.href = '/dashboard';
-                    }, 1000);
+                    if(data.role === 'USER' && data.accountType === 'RECRUITER') {
+                        window.location.href = '/recruiter/me';
+                    } else if(data.role === 'USER' && data.accountType === 'JOB_SEEKER') {
+                        window.location.href = '/jobseeker/me';
+                    } else if(data.role === 'ADMIN') {
+                        window.location.href = '/admin/dashboard';
+                    }
 
                 } else {
                     showMessage(data.message || 'Invalid credentials');

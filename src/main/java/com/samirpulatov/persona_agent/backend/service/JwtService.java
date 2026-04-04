@@ -20,9 +20,13 @@ public class JwtService {
     public static final String SECRET = "MqVC76FWb9dbJFOYdY462GiIeieDsKv8GEdgE399wJN";
 
     //Use email as the subject of the token
-    public String generateToken(String email) {
+    public String generateToken(CustomUserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>(); // claims are statements, typically about the user
-        return createToken(claims,email);
+        claims.put("userId",userDetails.getId());
+        claims.put("accountType",userDetails.getAccountType());
+        claims.put("username",userDetails.getUsername());
+        claims.put("role",userDetails.getRole());
+        return createToken(claims,userDetails.getUsername());
     }
 
     private String createToken(Map<String, Object> claims, String email) {

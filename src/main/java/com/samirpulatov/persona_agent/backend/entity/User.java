@@ -1,5 +1,6 @@
 package com.samirpulatov.persona_agent.backend.entity;
 
+import com.samirpulatov.persona_agent.backend.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -30,6 +31,10 @@ public class User {
     @Column(nullable = false)
     @NotBlank(message = "Please select your account type")
     private String accountType;
+
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
 
     @Column(unique = true, nullable = false)

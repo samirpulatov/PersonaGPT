@@ -22,7 +22,7 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(
-                new SimpleGrantedAuthority(user.getAccountType())
+                new SimpleGrantedAuthority("ROLE_" + user.getRole().name())
         );
     }
 
@@ -63,6 +63,14 @@ public class CustomUserDetails implements UserDetails {
 
     public String getAccountType(){
         return user.getAccountType();
+    }
+
+    public Long getId(){
+        return user.getId();
+    }
+
+    public String getRole(){
+        return user.getRole().name();
     }
 
 

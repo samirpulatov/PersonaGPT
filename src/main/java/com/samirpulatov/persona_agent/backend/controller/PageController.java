@@ -17,4 +17,9 @@ public class PageController {
     public String signUp() {
         return "forward:/sign_up.html";
     }
+
+    @GetMapping("/recruiter/me")
+    public String userDashboard() {
+        return "forward:/recruiter/dashboard.html";
+    }
 }

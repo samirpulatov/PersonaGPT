@@ -63,14 +63,15 @@ public class AuthController {
         );
 
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        String token = jwtService.generateToken(userDetails.getUsername()); //getUsername() returns the email
+        String token = jwtService.generateToken(userDetails);
 
         return ResponseEntity.ok(
                 Map.of(
                         "token", token,
                         "email", userDetails.getUsername(),
                         "username", userDetails.getRealUserName(),
-                        "accountType", userDetails.getAccountType()
+                        "accountType", userDetails.getAccountType(),
+                        "role", userDetails.getRole()
                 )
         );
     }

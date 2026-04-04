@@ -43,8 +43,8 @@ public class SecurityConfig {
                 //Configure endpoint authorization
                 .authorizeHttpRequests(auth -> auth
                     //Public endpoints
-                        .requestMatchers("/","/index.html", "/sign_in.html","/sign_up.html", "/error").permitAll()
-                        .requestMatchers("/sign_in","/sign_up").permitAll()
+                        .requestMatchers("/","/index.html", "/sign_in.html","/sign_up.html", "/recruiter/dashboard.html", "/error").permitAll()
+                        .requestMatchers("/sign_in","/sign_up","/recruiter/me").permitAll()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
 

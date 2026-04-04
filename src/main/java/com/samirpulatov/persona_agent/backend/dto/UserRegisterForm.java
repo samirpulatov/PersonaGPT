@@ -1,6 +1,7 @@
 package com.samirpulatov.persona_agent.backend.dto;
 
 import com.samirpulatov.persona_agent.backend.enums.AccountType;
+import com.samirpulatov.persona_agent.backend.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,6 +18,7 @@ public record UserRegisterForm (
 
     @NotNull(message = "Please select an account type")
     AccountType accountType,
+
 
     @NotBlank(message = "Email is required")
     @Email(message = "Please enter a valid email address")

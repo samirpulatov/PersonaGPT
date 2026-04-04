@@ -2,6 +2,7 @@ package com.samirpulatov.persona_agent.backend.service;
 
 import com.samirpulatov.persona_agent.backend.entity.User;
 import com.samirpulatov.persona_agent.backend.enums.AccountType;
+import com.samirpulatov.persona_agent.backend.enums.Role;
 import com.samirpulatov.persona_agent.backend.repository.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,6 +46,7 @@ public class UserService {
                             .firstName(firstNameTrimmed)
                             .lastName(lastNameTrimmed)
                             .accountType(accountType.name())
+                            .role(Role.USER)
                             .email(normalizedEmail)
                             .username(normalizedUsername)
                             .password(passwordEncoder.encode(rawPassword))
