@@ -697,6 +697,36 @@
             handleSend();
         }
     });
+
+    function loadRecruiterData() {
+        const token = localStorage.getItem("token");
+
+        if (!token) {
+            console.log("Invalid token. User is not logged in.");
+            return;
+        }
+
+        fetch("/api/recruiter/me", {
+            method: "GET",
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Content-Type": "application/json"
+            }
+        })
+            .then(res => {
+                if (res.status === 403) {
+                    throw new Error("Not authorized.");
+                }
+                return res.json();
+            })
+            .then(data => {
+                console.log("User data", data);
+            })
+            .catch(err => {
+                console.error("Error:", err.message);
+            });
+    }
+    loadRecruiterData();
 </script>
 </body>
 </html>
