@@ -440,6 +440,21 @@ h2{
 
 
 
+.brand__logo {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #0a66c2, #378fe9);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 800;
+    box-shadow: 0 8px 18px rgba(10, 102, 194, 0.22);
+}
+
+
+
 
 
 .form{

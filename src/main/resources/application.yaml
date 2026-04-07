@@ -11,6 +11,16 @@ spring:
     locations: classpath:db/migration
     cleanDisabled: false
 
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  app:
+    upload:
+      dir: ./uploads/documents
+
+
 
 openai:
   apiKey: ${OPEN_API_KEY}

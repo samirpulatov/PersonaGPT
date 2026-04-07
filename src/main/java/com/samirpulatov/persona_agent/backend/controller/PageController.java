@@ -22,4 +22,9 @@ public class PageController {
     public String userDashboard() {
         return "forward:/recruiter/dashboard.html";
     }
+
+    @GetMapping("documents/upload")
+    public String uploadDocuments() {
+        return "forward:/documents/upload_pdf.html";
+    }
 }
