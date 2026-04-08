@@ -2,9 +2,112 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Upload PDF — PersonaGPT</title>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
+
+<header class="header">
+    <div class="container">
+        <div class="header__inner">
+            <a class="brand" href="/">
+                <span class="brand__logo">P</span>
+                <span>PersonaGPT</span>
+            </a>
+        </div>
+    </div>
+</header>
+
+<main class="auth">
+    <div class="container">
+        <div class="auth__wrap">
+            <div class="auth__head">
+                <h1 class="auth__title">Upload your PDF</h1>
+                <p class="auth__hint">
+                    Please upload your document to continue.
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="card__pad">
+                    <form id="uploadForm" class="form">
+                        <div class="form__row form__row--full">
+                            <label for="file">Choose PDF file</label>
+                            <input class="input" id="file" name="file" type="file" accept="application/pdf" required>
+                        </div>
+
+                        <div class="form__actions">
+                            <div id="formMessage" class="form__alert" style="display:none;"></div>
+                            <button class="btn btn--primary btn--block" type="submit">Upload ➔</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<script>
+    const token = localStorage.getItem('token');
+    const form = document.getElementById('uploadForm');
+    const formMessage = document.getElementById('formMessage');
+
+    function showMessage(message, isError = true) {
+        formMessage.style.display = 'block';
+        formMessage.textContent = message;
+        formMessage.className = isError
+            ? 'form__alert form__alert--error'
+            : 'form__alert form__alert--success';
+    }
+
+    // 🔒 Проверка авторизации
+    if (!token) {
+        window.location.href = '/sign_in';
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const fileInput = document.getElementById('file');
+        const file = fileInput.files[0];
+
+        if (!file) {
+            showMessage('Please select a file');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await fetch('http://localhost:8080/api/documents/me/upload/pdf', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                body: formData
+            });
+
+            if (response.ok) {
+                showMessage('File uploaded successfully!', false);
+
+                // 👉 после загрузки можно отправить дальше
+                setTimeout(() => {
+                    window.location.href = '/jobseeker/me'; // или куда тебе нужно
+                }, 1000);
+
+            } else {
+                const error = await response.text();
+                showMessage(error || 'Upload failed');
+            }
+
+        } catch (err) {
+            console.error(err);
+            showMessage('Server error');
+        }
+    });
+</script>
 
 </body>
 </html>

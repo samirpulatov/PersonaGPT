@@ -43,20 +43,26 @@ public class SecurityConfig {
                 //Configure endpoint authorization
                 .authorizeHttpRequests(auth -> auth
                     //Public endpoints
-                        .requestMatchers("/","/index.html", "/sign_in.html","/sign_up.html", "/error").permitAll()
+                        .requestMatchers("/","/index.html", "/sign_in.html","/sign_up.html",  "/error").permitAll()
                         .requestMatchers("/sign_in","/sign_up").permitAll()
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
 
+                        .requestMatchers("/documents/upload", "/upload_pdf.html").permitAll()
+
                         .requestMatchers("/recruiter/me", "/recruiter/dashboard.html").permitAll()
 
-                                .requestMatchers("/api/recruiter/me").hasRole("USER")
 
-                        .anyRequest().authenticated()
+
+
 
 
 
                     //Role-based endpoints
+                        .requestMatchers("/api/recruiter/me").hasRole("USER")
+
+
+                        .anyRequest().authenticated()
 
                 )
 

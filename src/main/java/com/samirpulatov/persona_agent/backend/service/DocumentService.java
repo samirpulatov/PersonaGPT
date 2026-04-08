@@ -1,11 +1,12 @@
 package com.samirpulatov.persona_agent.backend.service;
 
-import ch.qos.logback.core.util.StringUtil;
+import com.samirpulatov.persona_agent.backend.dto.DocumentUploadResponse;
 import com.samirpulatov.persona_agent.backend.entity.Document;
 import com.samirpulatov.persona_agent.backend.entity.User;
 import com.samirpulatov.persona_agent.backend.enums.DocumentStatus;
 import com.samirpulatov.persona_agent.backend.repository.DocumentRepository;
 import com.samirpulatov.persona_agent.backend.repository.UserRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -14,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -31,7 +31,7 @@ public class DocumentService {
 
 
 
-    public void uploadPdf(MultipartFile file, Long userId) throws IOException {
+    public DocumentUploadResponse uploadPdf(MultipartFile file, Integer userId) throws IOException {
         validateDocument(file);
 
         User user = userRepository.findById(userId).orElseThrow(
@@ -54,15 +54,23 @@ public class DocumentService {
 
         Files.copy(file.getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
 
-        Document document = new Document();
-        document.setUserId(user.getId());
-        document.setOriginalFilename(originalFilename);
-        document.setStoragePath(targetPath.toString());
-        document.setMimeType(file.getContentType());
-        document.setFileSize(file.getSize());
-        document.setStatus(DocumentStatus.UPLOADED);
-        document.setCreatedAt(LocalDateTime.now());
+        Document document = new Document.DocumentBuilder()
+                .userId(user.getId())
+                .originalFilename(originalFilename)
+                .storagePath(targetPath.toString())
+                .mimeType(file.getContentType())
+                .fileSize(file.getSize())
+                .status(DocumentStatus.UPLOADED)
+                .createdAt(LocalDateTime.now())
+                .build();
+
         documentRepository.save(document);
+
+        return new DocumentUploadResponse(
+                document.getId(),
+                originalFilename,
+                document.getStatus().name(),
+                "Saved PDF file");
     }
 
 
@@ -84,8 +92,9 @@ public class DocumentService {
         }
 
         String contentType = file.getContentType();
-        if(contentType == null || !contentType.equalsIgnoreCase("application/pdf")){}
-        throw new IllegalArgumentException("File must be a PDF");
+        if(contentType == null || !contentType.equalsIgnoreCase("application/pdf")){
+            throw new IllegalArgumentException("File must be a PDF");
+        }
     }
 
     private String generateStoredFilename(String originalFilename) {

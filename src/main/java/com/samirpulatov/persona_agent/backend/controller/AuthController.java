@@ -1,6 +1,7 @@
 package com.samirpulatov.persona_agent.backend.controller;
 
 import com.samirpulatov.persona_agent.backend.dto.UserLoginForm;
+import com.samirpulatov.persona_agent.backend.dto.UserLoginResponse;
 import com.samirpulatov.persona_agent.backend.dto.UserRegisterForm;
 import com.samirpulatov.persona_agent.backend.service.CustomUserDetails;
 import com.samirpulatov.persona_agent.backend.service.JwtService;
@@ -65,14 +66,14 @@ public class AuthController {
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         String token = jwtService.generateToken(userDetails);
 
-        return ResponseEntity.ok(
-                Map.of(
-                        "token", token,
-                        "email", userDetails.getUsername(),
-                        "username", userDetails.getRealUserName(),
-                        "accountType", userDetails.getAccountType(),
-                        "role", userDetails.getRole()
-                )
+        UserLoginResponse userLoginResponse = new UserLoginResponse(
+                token,
+                userDetails.getUsername(),
+                userDetails.getRealUserName(),
+                userDetails.getAccountType(),
+                userDetails.getRole()
         );
+
+        return ResponseEntity.ok(userLoginResponse);
     }
 }

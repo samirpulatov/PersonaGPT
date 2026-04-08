@@ -62,7 +62,7 @@ public class JwtService {
     }
 
     //method to extract all claims from a token and return them as a Claims object
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith((SecretKey) getSignKey())
                 .build()

@@ -23,8 +23,8 @@ public class PageController {
         return "forward:/recruiter/dashboard.html";
     }
 
-    @GetMapping("documents/upload")
+    @GetMapping("/documents/upload")
     public String uploadDocuments() {
-        return "forward:/documents/upload_pdf.html";
+        return "forward:/upload_pdf.html";
     }
 }

@@ -162,12 +162,19 @@
                         localStorage.setItem('token', data.token);
                     }
 
-                    if(data.role === 'USER' && data.accountType === 'RECRUITER') {
-                        window.location.href = '/recruiter/me';
-                    } else if(data.role === 'USER' && data.accountType === 'JOB_SEEKER') {
-                        window.location.href = '/jobseeker/me';
-                    } else if(data.role === 'ADMIN') {
-                        window.location.href = '/admin/dashboard';
+                    const token = localStorage.getItem('token');
+
+                    const pdfResponse = await fetch('http://localhost:8080/api/documents/me/upload/hasDocument', {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    const pdfData = await pdfResponse.json();
+
+                    if (!pdfData.hasDocument) {
+                        window.location.href = '/documents/upload';
                     }
 
                 } else {

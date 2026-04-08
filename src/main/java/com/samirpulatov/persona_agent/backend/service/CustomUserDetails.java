@@ -65,7 +65,7 @@ public class CustomUserDetails implements UserDetails {
         return user.getAccountType();
     }
 
-    public Long getId(){
+    public Integer getId(){
         return user.getId();
     }
 

@@ -5,6 +5,4 @@ public record DocumentUploadResponse(
         String originalFilename,
         String status,
         String message
-){
-
-}
+){ }
